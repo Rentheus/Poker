@@ -46,14 +46,27 @@ class HAND:
             self.isFullHouse = True
         elif len(self.duplicateArray[:,1]) > 1:
             self.isDoublePair = True
-        #if 2 in self.duplicateArray[:,1]:
-        #    self.isPair = True
-        #if 2 in self.duplicateArray[:,1]:
-        #    self.isPair = True
+        
+        self.tmp = 0
+        for i in range(5):
+            if self.CARDs[i].suit == self.CARDs[i-1].suit:
+                self.tmp +=1
+        if self.tmp == 5:
+            self.isFlush = True
+        
+        print(self.duplicateArray[:,0])
+        if len(self.duplicateArray[:,0]) == 5:
+            for i in self.duplicateArray[:,0]:
+                if (i+1 in self.duplicateArray[:,0] and
+                i+2 in self.duplicateArray[:,0] and
+                i+3 in self.duplicateArray[:,0] and
+                i+4 in self.duplicateArray[:,0]):
+                    self.isStreet = True
 
+        
 
-a = [CARD(10, 2) for i in range(4)]
+a = [CARD(i+2, 2) for i in range(5)] 
 b = HAND(a)
 b.Value()
 print(b.isPair)
-print(b.isDoublePair)
+print(b.isStreet)
