@@ -21,6 +21,9 @@ class HAND:
         self.isStreet = False
         self.isFlush = False
         self.isFullHouse = False
+        self.isStreetFlush = False
+
+        self.HANDValue  = 0
 
     def Value(self):
         self.numbers = []
@@ -44,8 +47,10 @@ class HAND:
             self.isQuad = True
         if 2 in self.duplicateArray[:,1] and 3 in self.duplicateArray[:,1]:
             self.isFullHouse = True
+            self.isPair = False
         elif len(self.duplicateArray[:,1]) > 1:
             self.isDoublePair = True
+            self.isPair = False
         
         self.tmp = 0
         for i in range(5):
@@ -54,7 +59,7 @@ class HAND:
         if self.tmp == 5:
             self.isFlush = True
         
-        print(self.duplicateArray[:,0])
+        
         if len(self.duplicateArray[:,0]) == 5:
             for i in self.duplicateArray[:,0]:
                 if (i+1 in self.duplicateArray[:,0] and
@@ -62,11 +67,21 @@ class HAND:
                 i+3 in self.duplicateArray[:,0] and
                 i+4 in self.duplicateArray[:,0]):
                     self.isStreet = True
+        if self.isStreet == True and self.isFlush == True:
+            self.isStreetFlush == True
+            self.isStreet == False
+            self.isFlush == False
+
+        if self.isStreetFlush == True:
+            self.HANDValue = max(self.duplicateArray[:,0]) * 16**9
+        if self.isQuad == True:
+            self.HANDValue = {v: k for k, v in self.duplicateDict.items()}[4] * 16**9 + {v: k for k, v in self.duplicateDict.items()}[1]
 
         
 
-a = [CARD(i+2, 2) for i in range(5)] 
+a = [CARD(10, 2) for i in range(4)] + [CARD(8,3)]
 b = HAND(a)
+
 b.Value()
-print(b.isPair)
-print(b.isStreet)
+print(b.isQuad)
+print(b.HANDValue)
