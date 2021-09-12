@@ -21,6 +21,9 @@ class HAND:
         self.isStreet = False
         self.isFlush = False
         self.isFullHouse = False
+        self.isStreetFlush = False
+
+        self.HANDValue  = 0
 
     def Value(self):
         self.numbers = []
@@ -42,10 +45,13 @@ class HAND:
             self.isTriple = True
         if 4 in self.duplicateArray[:,1]:
             self.isQuad = True
-        if 2 in self.duplicateArray[:,1] and 3 in self.duplicateArray[:,1]:
+        elif 2 in self.duplicateArray[:,1] and 3 in self.duplicateArray[:,1]:
             self.isFullHouse = True
-        elif len(self.duplicateArray[:,1]) > 1:
+            self.isPair = False
+            self.isTriple = False
+        elif len(self.duplicateArray[:,1]) > 1 and len(self.duplicateArray[:,1]) < 4:
             self.isDoublePair = True
+            self.isPair = False
         
         self.tmp = 0
         for i in range(5):
@@ -54,7 +60,11 @@ class HAND:
         if self.tmp == 5:
             self.isFlush = True
         
-        print(self.duplicateArray[:,0])
+        ########################################### HANDValue basiert auf 13-er System da es 13 Verschiedene Karten gibt
+        #  Value ergibt sich so: Value der Kombinationskarten* Kombinationswert^13 + Nächsthöchste Karte
+        ########################################### HANDValue basiert auf 13-er System da es 13 Verschiedene Karten gibt
+        # #  Value ergibt sich so: Value der Kombinationskarten* Kombinationswert^13 + Nächsthöchste Karte        
+        
         if len(self.duplicateArray[:,0]) == 5:
             for i in self.duplicateArray[:,0]:
                 if (i+1 in self.duplicateArray[:,0] and
@@ -62,11 +72,42 @@ class HAND:
                 i+3 in self.duplicateArray[:,0] and
                 i+4 in self.duplicateArray[:,0]):
                     self.isStreet = True
+        if self.isStreet == True and self.isFlush == True:
+            self.isStreetFlush == True
+            self.isStreet == False
+            self.isFlush == False
+
+        print([k for k,v in self.duplicateDict.items()])
+
+        if self.isStreetFlush == True:
+            self.HANDValue = max(self.duplicateArray[:,0]) * 13**9
+        elif self.isQuad == True:
+            self.HANDValue = {v: k for k, v in self.duplicateDict.items()}[4] * 13**8 + {v: k for k, v in self.duplicateDict.items()}[1]
+        elif self.isFullHouse == True:
+            self.HANDValue = {v: k for k, v in self.duplicateDict.items()}[3] * 13**7 + {v: k for k, v in self.duplicateDict.items()}[2] * 13**3
+        elif self.isFlush == True:
+            self.HANDValue = 2*13**6
+        elif self.isStreet == True:
+            self.HANDValue == max(self.duplicateArray[:,0]) * 13**5
+        elif self.isTriple == True:
+            self.HANDValue = [k for k,v in self.duplicateDict.items() if v == 3][0] * 13**4 + np.max([k for k,v in self.duplicateDict.items() if v ==1])
+        elif self.isDoublePair == True:
+            self.HANDValue = np.max([k for k,v in self.duplicateDict.items() if v == 2])* 13**3 + np.min([k for k,v in self.duplicateDict.items() if v == 2]) * 13**1 + np.max([k for k,v in self.duplicateDict.items() if v ==1])
+        elif self.isPair == True:
+            self.HANDValue = [k for k,v in self.duplicateDict.items() if v == 2][0] * 13**2 + np.max([k for k,v in self.duplicateDict.items() if v ==1])
+        else:
+            self.HANDValue = np.max([k for k,v in self.duplicateDict.items() if v ==1])
 
         
 
-a = [CARD(i+2, 2) for i in range(5)] 
+a = [CARD(10, 2) for i in range(3)] + [CARD(8,3) for i in range(2)]
 b = HAND(a)
+c = [CARD(np.random.randint(2,14), np.random.randint(1,5)) for i in range(5)]
+d = HAND(c)
+d.Value()
+
 b.Value()
-print(b.isPair)
-print(b.isStreet)
+print(b.isTriple)
+print(b.HANDValue > d.HANDValue)
+print(b.HANDValue)
+print(d.HANDValue)
