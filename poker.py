@@ -1,4 +1,5 @@
 import numpy as np
+import random
 
 class CARD:
     "Centralised Analytic Rateable Datapoint or CARD"
@@ -70,7 +71,7 @@ class HAND:
                 if (i+1 in self.duplicateArray[:,0] and
                 i+2 in self.duplicateArray[:,0] and
                 i+3 in self.duplicateArray[:,0] and
-                i+4 in self.duplicateArray[:,0]):
+                (i+4 in self.duplicateArray[:,0] or (i-1 == 1 and 13 in self.duplicateArray[:,0]))):
                     self.isStreet = True
         if self.isStreet == True and self.isFlush == True:
             self.isStreetFlush == True
@@ -98,16 +99,32 @@ class HAND:
         else:
             self.HANDValue = np.max([k for k,v in self.duplicateDict.items() if v ==1])
 
+class game:
+    def __init__(self):
+        self.players = []
+        self.deck = []
+        for i in range(4):
+            for j in range(13):
+                self.deck.append(CARD(j,i))
+  
+    def chooseCARD(self):
+        self.tempCARD = random.choice(self.deck)
+        self.deck.remove(self.tempCARD)
+        return self.tempCARD
+
+
         
+a = game()
+print(len(a.deck))
+#a = [CARD(i+3, 2) for i in range(4)] + [CARD(13,3)]
+#b = HAND(a)
+##c = [CARD(np.random.randint(2,14), np.random.randint(1,5)) for i in range(5)]
+##d = HAND(c)
+##d.Value()
+##
+#b.Value()
+##print(b.isTriple)
+##print(b.HANDValue > d.HANDValue)
+#print(b.isStreet)
+##print(d.HANDValue)
 
-a = [CARD(10, 2) for i in range(3)] + [CARD(8,3) for i in range(2)]
-b = HAND(a)
-c = [CARD(np.random.randint(2,14), np.random.randint(1,5)) for i in range(5)]
-d = HAND(c)
-d.Value()
-
-b.Value()
-print(b.isTriple)
-print(b.HANDValue > d.HANDValue)
-print(b.HANDValue)
-print(d.HANDValue)
