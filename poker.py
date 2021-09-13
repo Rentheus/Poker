@@ -114,8 +114,7 @@ class game:
 
 
         
-a = game()
-print(len(a.deck))
+
 #a = [CARD(i+3, 2) for i in range(4)] + [CARD(13,3)]
 #b = HAND(a)
 ##c = [CARD(np.random.randint(2,14), np.random.randint(1,5)) for i in range(5)]
